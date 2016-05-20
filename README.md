@@ -1,2 +1,8 @@
-# poor2-android
-Applicazione Android di controllo per il Poor V2
+# Poor2 per Android
+
+Applicazione di controllo per il Poor V2. Permette di gestire:
+
+* Movimento
+* Sensori
+* ...
+
