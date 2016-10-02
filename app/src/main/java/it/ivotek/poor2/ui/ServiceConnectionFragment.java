@@ -19,6 +19,7 @@ public class ServiceConnectionFragment extends Fragment implements ServiceConnec
 
     private boolean mBound;
     private RobotService mService;
+    private OnServiceConnectionFragmentListener mListener;
 
     public ServiceConnectionFragment() {
     }
@@ -36,8 +37,22 @@ public class ServiceConnectionFragment extends Fragment implements ServiceConnec
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        if (context instanceof OnServiceConnectionFragmentListener) {
+            mListener = (OnServiceConnectionFragmentListener) context;
+        }
+        else {
+            throw new RuntimeException(context.toString()
+                + " must implement " + OnServiceConnectionFragmentListener.class.getSimpleName());
+        }
+
         RobotService.start(context);
         mBound = RobotService.bind(context, this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
     @Override
@@ -57,11 +72,25 @@ public class ServiceConnectionFragment extends Fragment implements ServiceConnec
     public void onServiceConnected(ComponentName name, IBinder service) {
         mService = ((RobotService.LocalBinder) service).getService();
         mBound = true;
+        if (mListener != null)
+            mListener.onServiceConnected();
     }
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
         mBound = false;
         mService = null;
+        if (mListener != null)
+            mListener.onServiceDisconnected();
     }
+
+    /**
+     * Interfaccia da implementare per l'Activity per essere notificati
+     * della connessione al servizio di connessione.
+     */
+    public interface OnServiceConnectionFragmentListener {
+        void onServiceConnected();
+        void onServiceDisconnected();
+    }
+
 }

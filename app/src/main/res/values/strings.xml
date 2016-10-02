@@ -13,4 +13,7 @@
     <string name="status_discovering">Discovering robots…</string>
     <string name="status_connecting">Connecting…</string>
 
+    <string name="drawer_status_connected">CONNECTED TO %s</string>
+    <string name="drawer_status_disconnected">DISCONNECTED</string>
+
 </resources>

@@ -2,18 +2,22 @@ package it.ivotek.poor2.ui;
 
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import it.ivotek.poor2.R;
 import it.ivotek.poor2.client.RobotConnectInfo;
@@ -31,6 +35,8 @@ import it.ivotek.poor2.service.RobotService;
  */
 public class ConnectFragment extends Fragment implements
         RobotDiscoveryListener, RobotConnectListener {
+
+    private static final int REQUEST_BLUETOOTH_ENABLE = 1;
 
     private OnConnectionFragmentListener mListener;
 
@@ -95,9 +101,7 @@ public class ConnectFragment extends Fragment implements
         RobotService service = f.getService();
 
         if (mConnecting) {
-            // TODO service.disconnect();
-            setStatus(R.string.text_click_to_connect);
-            mConnectButton.setText(R.string.btn_connect);
+            doDisconnect();
         }
         else {
             enableControls(false);
@@ -105,8 +109,49 @@ public class ConnectFragment extends Fragment implements
 
             service.setDiscoverListener(this);
             service.setConnectListener(this);
-            service.discover();
+            if (service.canDiscover()) {
+                service.discover();
+            }
+            else {
+                service.enableDiscovery(this, REQUEST_BLUETOOTH_ENABLE);
+            }
         }
+    }
+
+    public void doDisconnect() {
+        doDisconnect(null);
+    }
+
+    public void doDisconnect(final String message) {
+        mConnecting = false;
+        ServiceConnectionFragment f = getConnectionFragment();
+        RobotService service = f.getService();
+        if (service.isConnected()) {
+            service.disconnect();
+        }
+
+        service.setDiscoverListener(null);
+        service.setConnectListener(null);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (message != null) {
+                    setStatus(message);
+                }
+                else {
+                    setStatus(R.string.text_click_to_connect);
+                }
+                mConnectButton.setText(R.string.btn_connect);
+                enableControls(true);
+            }
+        });
+    }
+
+    public void doCancelDiscovery() {
+        ServiceConnectionFragment f = getConnectionFragment();
+        RobotService service = f.getService();
+        service.cancelDiscovery();
+        doDisconnect();
     }
 
     public void doConnect(RobotConnectInfo robot) {
@@ -118,6 +163,12 @@ public class ConnectFragment extends Fragment implements
         ServiceConnectionFragment f = getConnectionFragment();
         RobotService service = f.getService();
         service.connect(robot);
+    }
+
+    public void doAuthorize(RobotConnectInfo robot) {
+        ServiceConnectionFragment f = getConnectionFragment();
+        RobotService service = f.getService();
+        service.authorize(robot);
     }
 
     @Override
@@ -132,7 +183,16 @@ public class ConnectFragment extends Fragment implements
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     RobotConnectInfo robot = adapter.getItem(which);
-                    doConnect(robot);
+                    if (robot.isAuthorized())
+                        doConnect(robot);
+                    else
+                        doAuthorize(robot);
+                }
+            })
+            .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    doCancelDiscovery();
                 }
             })
             // TODO i18n
@@ -159,17 +219,48 @@ public class ConnectFragment extends Fragment implements
     }
 
     @Override
+    public void onAuthorized(RobotConnectInfo robot) {
+        Log.v("Poor2", "robot was authorized: " + robot);
+        doConnect(robot);
+    }
+
+    @Override
     public void onConnected(RobotConnectInfo robot) {
+        mConnecting = false;
         if (mListener != null) {
-            mConnecting = false;
             mListener.onConnected(robot);
         }
     }
 
     @Override
     public void onDisconnected(RobotConnectInfo connectInfo) {
-        // TODO
         mConnecting = false;
+        if (mListener != null) {
+            // TODO mListener.onDisconnected(robot);
+        }
+    }
+
+    @Override
+    public void onConnectError(RobotConnectInfo robot, String message) {
+        // TODO i18n
+        doDisconnect("Error: " + message);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_BLUETOOTH_ENABLE) {
+            if (resultCode == Activity.RESULT_OK) {
+                ServiceConnectionFragment f = getConnectionFragment();
+                RobotService service = f.getService();
+                service.discover();
+            }
+            else {
+                // TODO i18n
+                Toast.makeText(getContext(), "Operation canceled by the user.",
+                    Toast.LENGTH_SHORT).show();
+                // TODO revert tutto
+            }
+        }
     }
 
     /**

@@ -7,6 +7,8 @@ import java.util.List;
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 
 import it.ivotek.poor2.util.Bluetooth;
 
@@ -22,6 +24,8 @@ public class BluetoothRobotClient implements
     private final Bluetooth mBluetooth;
     private final List<RobotConnectInfo> mScanned;
 
+    private boolean mFirstTime;
+
     private RobotDiscoveryListener mDiscoverListener;
     private RobotConnectListener mConnectListener;
     private BluetoothRobotConnectInfo mRobot;
@@ -32,6 +36,17 @@ public class BluetoothRobotClient implements
         mBluetooth.setDiscoveryCallback(this);
         mBluetooth.setCommunicationCallback(this);
         mScanned = new ArrayList<>();
+        mFirstTime = true;
+    }
+
+    @Override
+    public boolean canDiscover() {
+        return mBluetooth.isBluetoothEnabled();
+    }
+
+    @Override
+    public void enableDiscovery(Fragment fragment, int requestCode) {
+        mBluetooth.requestEnableBluetooth(fragment, requestCode);
     }
 
     @Override
@@ -42,6 +57,23 @@ public class BluetoothRobotClient implements
         // imposta tutto e fai partire lo scan
         mDiscoverListener = listener;
         mScanned.clear();
+        if (mFirstTime) {
+            mFirstTime = false;
+
+            // prima volta: ritorna device abbinati
+            List<BluetoothDevice> paired = mBluetooth.getPairedDevices();
+            if (paired != null && paired.size() > 0) {
+                for (BluetoothDevice dev : paired) {
+                    onDevice(dev);
+                }
+                // simula discovery con i device abbinati
+                onFinish();
+                return;
+            }
+        }
+
+        // non abbiamo nulla oppure non e' la prima volta
+        // avvia discovery reale
         mBluetooth.scanDevices();
     }
 
@@ -61,18 +93,39 @@ public class BluetoothRobotClient implements
     }
 
     @Override
+    public void authorize(BluetoothRobotConnectInfo robot, RobotConnectListener listener) {
+        if (mConnectListener != null)
+            throw new IllegalArgumentException("Another connection is active or in progress");
+
+        mConnectListener = listener;
+        mRobot = robot;
+        mBluetooth.pair(mBluetooth.getRemoteDevice(robot.getAddress()));
+    }
+
+    @Override
     public void disconnect() {
         if (mConnectListener != null) {
             mBluetooth.disconnect();
         }
     }
 
+    @Nullable
+    @Override
+    public BluetoothRobotConnectInfo getConnectedRobot() {
+        return mRobot;
+    }
+
+    @Override
+    public boolean isConnected() {
+        return mRobot != null && mBluetooth.isConnected();
+    }
+
     @Override
     public void onFinish() {
         final RobotDiscoveryListener l = mDiscoverListener;
         if (l != null) {
-            l.discovered(mScanned);
             mDiscoverListener = null;
+            l.discovered(mScanned);
             mScanned.clear();
         }
     }
@@ -83,11 +136,20 @@ public class BluetoothRobotClient implements
         String address = device.getAddress();
         String name = device.getName();
         BluetoothClass btClass = device.getBluetoothClass();
-        mScanned.add(new BluetoothRobotConnectInfo(address, name, btClass));
+        int bondState = device.getBondState();
+        mScanned.add(new BluetoothRobotConnectInfo(address, name, btClass, bondState));
     }
 
     @Override
     public void onPair(BluetoothDevice device) {
+        if (mConnectListener != null) {
+            if (device.getBondState() == BluetoothDevice.BOND_BONDED) {
+                final RobotConnectListener listener = mConnectListener;
+                // abbiamo finito qui
+                mConnectListener = null;
+                listener.onAuthorized(mRobot);
+            }
+        }
     }
 
     @Override
@@ -107,10 +169,10 @@ public class BluetoothRobotClient implements
     public void onDisconnect(BluetoothDevice device, String message) {
         final RobotConnectListener l = mConnectListener;
         final BluetoothRobotConnectInfo robot = mRobot;
+        mConnectListener = null;
+        mRobot = null;
         if (l != null) {
             l.onDisconnected(robot);
-            mConnectListener = null;
-            mRobot = null;
         }
     }
 
@@ -125,7 +187,13 @@ public class BluetoothRobotClient implements
 
     @Override
     public void onConnectError(BluetoothDevice device, String message) {
-
+        final RobotConnectListener l = mConnectListener;
+        final BluetoothRobotConnectInfo robot = mRobot;
+        mConnectListener = null;
+        mRobot = null;
+        if (l != null) {
+            l.onConnectError(robot, message);
+        }
     }
 
 }

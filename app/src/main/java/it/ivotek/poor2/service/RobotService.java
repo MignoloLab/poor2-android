@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.v4.app.Fragment;
 
 import it.ivotek.poor2.client.BluetoothRobotClient;
 import it.ivotek.poor2.client.IRobotClient;
@@ -28,7 +29,9 @@ public class RobotService extends Service {
     @Override
     @SuppressWarnings("unchecked")
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mClient = (IRobotClient) new BluetoothRobotClient(this);
+        if (mClient == null) {
+            mClient = (IRobotClient) new BluetoothRobotClient(this);
+        }
         return START_STICKY;
     }
 
@@ -39,7 +42,8 @@ public class RobotService extends Service {
 
     @Override
     public void onDestroy() {
-        // TODO
+        mClient.cancelDiscovery();
+        mClient.disconnect();
     }
 
     public class LocalBinder extends Binder {
@@ -58,12 +62,40 @@ public class RobotService extends Service {
         mConnectListener = listener;
     }
 
+    public boolean canDiscover() {
+        return mClient.canDiscover();
+    }
+
+    public void enableDiscovery(Fragment fragment, int requestCode) {
+        mClient.enableDiscovery(fragment, requestCode);
+    }
+
     public void discover() {
         mClient.discover(mDiscoverListener);
     }
 
+    public void cancelDiscovery() {
+        mClient.cancelDiscovery();
+    }
+
     public void connect(RobotConnectInfo robot) {
         mClient.connect(robot, mConnectListener);
+    }
+
+    public void disconnect() {
+        mClient.disconnect();
+    }
+
+    public void authorize(RobotConnectInfo robot) {
+        mClient.authorize(robot, mConnectListener);
+    }
+
+    public RobotConnectInfo getConnectedRobot() {
+        return isConnected() ? mClient.getConnectedRobot() : null;
+    }
+
+    public boolean isConnected() {
+        return mClient.isConnected();
     }
 
     private static Intent intent(Context context) {

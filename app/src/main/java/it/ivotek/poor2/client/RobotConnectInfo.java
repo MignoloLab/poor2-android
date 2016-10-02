@@ -18,6 +18,8 @@ public abstract class RobotConnectInfo {
 
     public abstract String getDisplayName();
 
+    public abstract boolean isAuthorized();
+
     @Override
     public String toString() {
         return mConnectionString;

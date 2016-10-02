@@ -1,14 +1,5 @@
 package it.ivotek.poor2.util;
 
-import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,6 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.ParcelUuid;
+import android.os.Parcelable;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+
 /**
  * Created by Omar on 14/07/2015.
  * https://github.com/omaflak/Bluetooth-Library
@@ -26,7 +29,7 @@ public class Bluetooth {
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothSocket socket;
-    private BluetoothDevice device, devicePair;
+    private BluetoothDevice device, devicePair, deviceServices;
     private BufferedReader input;
     private OutputStream out;
 
@@ -41,7 +44,15 @@ public class Bluetooth {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
-    public void enableBluetooth(){
+    public boolean isBluetoothEnabled() {
+        return bluetoothAdapter != null && bluetoothAdapter.isEnabled();
+    }
+
+    public void requestEnableBluetooth(Fragment fragment, int requestCode) {
+        fragment.startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), requestCode);
+    }
+
+    public void enableBluetooth() {
         if(bluetoothAdapter!=null) {
             if (!bluetoothAdapter.isEnabled()) {
                 bluetoothAdapter.enable();
@@ -49,7 +60,7 @@ public class Bluetooth {
         }
     }
 
-    public void disableBluetooth(){
+    public void disableBluetooth() {
         if(bluetoothAdapter!=null) {
             if (bluetoothAdapter.isEnabled()) {
                 bluetoothAdapter.disable();
@@ -58,8 +69,7 @@ public class Bluetooth {
     }
 
     public void connectToAddress(String address) {
-        BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
-        new ConnectThread(device).start();
+        connectToDevice(bluetoothAdapter.getRemoteDevice(address));
     }
 
     public void connectToName(String name) {
@@ -71,8 +81,9 @@ public class Bluetooth {
         }
     }
 
-    public void connectToDevice(BluetoothDevice device){
-        new ConnectThread(device).start();
+    public void connectToDevice(BluetoothDevice device) {
+        // start service discovery first
+        scanServices(device);
     }
 
     public void disconnect() {
@@ -168,6 +179,10 @@ public class Bluetooth {
         return device;
     }
 
+    public BluetoothDevice getRemoteDevice(String address) {
+        return bluetoothAdapter.getRemoteDevice(address);
+    }
+
     public void scanDevices(){
         IntentFilter filter = new IntentFilter();
 
@@ -179,10 +194,17 @@ public class Bluetooth {
         bluetoothAdapter.startDiscovery();
     }
 
+    public void scanServices(BluetoothDevice device) {
+        context.registerReceiver(mUuidReceiver, new IntentFilter(BluetoothDevice.ACTION_UUID));
+        deviceServices = device;
+        device.fetchUuidsWithSdp();
+    }
+
     public void pair(BluetoothDevice device){
         context.registerReceiver(mPairReceiver, new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED));
         devicePair=device;
         try {
+            // FIXME questo non funziona su Android API < 19
             Method method = device.getClass().getMethod("createBond", (Class[]) null);
             method.invoke(device, (Object[]) null);
         } catch (Exception e) {
@@ -194,6 +216,7 @@ public class Bluetooth {
     public void unpair(BluetoothDevice device) {
         devicePair=device;
         try {
+            // FIXME questo non funziona su Android API < 19
             Method method = device.getClass().getMethod("removeBond", (Class[]) null);
             method.invoke(device, (Object[]) null);
         } catch (Exception e) {
@@ -245,6 +268,36 @@ public class Bluetooth {
                     context.unregisterReceiver(mPairReceiver);
                     if(discoveryCallback!=null)
                         discoveryCallback.onUnpair(devicePair);
+                }
+            }
+        }
+    };
+
+    private final BroadcastReceiver mUuidReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            if (BluetoothDevice.ACTION_UUID.equals(action)) {
+
+                final BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                final Parcelable[] uuids = intent.getParcelableArrayExtra(BluetoothDevice.EXTRA_UUID);
+
+                if (device.equals(deviceServices)) {
+                    // we don't need this anymore
+                    context.unregisterReceiver(this);
+
+                    if (uuids != null) {
+                        for (Parcelable uuid : uuids) {
+                            if (uuid.toString().equalsIgnoreCase(MY_UUID.toString())) {
+                                new ConnectThread(device).start();
+                                return;
+                            }
+                        }
+                    }
+
+                    if (communicationCallback != null) {
+                        communicationCallback.onError("No suitable communication channel found.");
+                    }
                 }
             }
         }

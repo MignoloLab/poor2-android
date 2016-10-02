@@ -1,21 +1,32 @@
 package it.ivotek.poor2.ui;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import it.ivotek.poor2.R;
 import it.ivotek.poor2.client.RobotConnectInfo;
+import it.ivotek.poor2.service.RobotService;
 
 
-public class MainActivity extends AppCompatActivity
-    implements NavigationView.OnNavigationItemSelectedListener, ConnectFragment.OnConnectionFragmentListener {
+public class MainActivity extends AppCompatActivity implements
+    NavigationView.OnNavigationItemSelectedListener,
+    ServiceConnectionFragment.OnServiceConnectionFragmentListener,
+    ConnectFragment.OnConnectionFragmentListener,
+    ControlFragment.OnControlFragmentListener {
+
+    private TextView mDrawerStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +38,13 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
             this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
+
+        // textview dello stato di connessione nel drawer
+        NavigationView nav = (NavigationView) drawer.findViewById(R.id.nav_view);
+        View header = nav.getHeaderView(0);
+        mDrawerStatus = (TextView) header.findViewById(R.id.textView);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -50,14 +66,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-
         // crea fragment connessione al servizio
         getConnectionFragment();
-
-        // TODO avvia fragment giusto a seconda dello stato di connessione?
-        getSupportFragmentManager().beginTransaction()
-            .replace(R.id.content, ConnectFragment.newInstance())
-            .commit();
     }
 
     @Override
@@ -95,7 +105,7 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -123,9 +133,66 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * Siamo connessi al servizio di connessione al robot.
+     * Possiamo popolare la finestra con qualcosa.
+     */
     @Override
-    public void onConnected(RobotConnectInfo connectInfo) {
-        // TODO
+    public void onServiceConnected() {
+        // crea fragment connessione al servizio
+        ServiceConnectionFragment f = getConnectionFragment();
+        RobotService service = f.getService();
+
+        Fragment fragment;
+        if (service.isConnected()) {
+            fragment = ControlFragment.newInstance();
+
+            RobotConnectInfo robot = service.getConnectedRobot();
+            setConnectedTo(robot.toString());
+        }
+        else {
+            fragment = ConnectFragment.newInstance();
+        }
+
+        getSupportFragmentManager().beginTransaction()
+            .replace(R.id.content, fragment)
+            .commit();
     }
 
+    @Override
+    public void onServiceDisconnected() {
+        // non dovrebbe accadere!
+        finish();
+    }
+
+    private void setDrawerStatus(CharSequence text) {
+        mDrawerStatus.setText(text);
+    }
+
+    private void setConnectedTo(String name) {
+        setDrawerStatus(getString(R.string.drawer_status_connected, name));
+    }
+
+    @Override
+    public void onConnected(final RobotConnectInfo connectInfo) {
+        Log.v("Poor2", "connected to " + connectInfo);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setConnectedTo(connectInfo.toString());
+                // apri il fragment di controllo
+                getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content, ControlFragment.newInstance())
+                    .commit();
+            }
+        });
+    }
+
+    @Override
+    public void onDisconnected() {
+        // disconnessione volontaria o dal robot
+        getSupportFragmentManager().beginTransaction()
+            .replace(R.id.content, ConnectFragment.newInstance())
+            .commit();
+    }
 }
