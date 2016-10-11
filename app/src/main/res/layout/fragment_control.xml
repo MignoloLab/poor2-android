@@ -1,15 +1,51 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="it.ivotek.poor2.ui.ControlFragment">
+    android:orientation="vertical"
+    tools:context="it.ivotek.poor2.ui.ControlFragment"
+    android:weightSum="1">
 
-    <TextView
-        style="?android:attr/textAppearanceLarge"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:orientation="horizontal"
+        android:layout_weight="0.97">
+
+        <com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBarWrapper
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/seek_movement_wrapper">
+
+            <com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBar
+                android:id="@+id/seek_movement"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:splitTrack="false"
+                android:max="100"
+                app:seekBarRotation="CW270"/>
+        </com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBarWrapper>
+
+        <SeekBar
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:max="100"
+            android:id="@+id/seek_turn"/>
+
+    </LinearLayout>
+
+    <ToggleButton android:id="@+id/toggle_slow"
+        android:text="Turtle mode"
+        android:textOff="Turtle mode OFF"
+        android:textOn="Turtle mode ON"
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TODO"
-        android:layout_gravity="center"/>
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

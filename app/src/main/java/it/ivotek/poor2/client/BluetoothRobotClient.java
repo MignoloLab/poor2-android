@@ -3,12 +3,14 @@ package it.ivotek.poor2.client;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 import it.ivotek.poor2.util.Bluetooth;
 
@@ -20,11 +22,15 @@ public class BluetoothRobotClient implements
         IRobotClient<BluetoothRobotConnectInfo>,
         Bluetooth.DiscoveryCallback, Bluetooth.CommunicationCallback {
 
+    private static final String MESSAGE_MOVE = "*%03d%03d%03d%03d";
+
     private final Context mContext;
     private final Bluetooth mBluetooth;
     private final List<RobotConnectInfo> mScanned;
 
     private boolean mFirstTime;
+    private int mEngineValue;
+    private int mTurnValue;
 
     private RobotDiscoveryListener mDiscoverListener;
     private RobotConnectListener mConnectListener;
@@ -194,6 +200,50 @@ public class BluetoothRobotClient implements
         if (l != null) {
             l.onConnectError(robot, message);
         }
+    }
+
+    @Override
+    public void setEnginePower(int value) {
+        mEngineValue = value;
+        updateMovement();
+    }
+
+    @Override
+    public void setTurn(int value) {
+        mTurnValue = value;
+        updateMovement();
+    }
+
+    private void updateMovement() {
+        if (!isConnected())
+            return;
+
+        // avanti/indietro
+        int forward, backward;
+        if (mEngineValue < 0) {
+            forward = 0;
+            backward = Math.abs(mEngineValue);
+        }
+        else {
+            forward = Math.abs(mEngineValue);
+            backward = 0;
+        }
+
+        // sinistra/destra
+        int left, right;
+        if (mTurnValue < 0) {
+            left = Math.abs(mTurnValue);
+            right = 0;
+        }
+        else {
+            left = 0;
+            right = Math.abs(mTurnValue);
+        }
+
+        // invia messaggio al robot
+        String msg = String.format(Locale.US, MESSAGE_MOVE, forward, backward, right, left);
+        Log.d("Poor", "sending to robot: " + msg);
+        mBluetooth.send(msg);
     }
 
 }

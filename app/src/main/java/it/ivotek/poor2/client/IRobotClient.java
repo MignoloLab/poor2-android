@@ -37,4 +37,16 @@ public interface IRobotClient<T extends RobotConnectInfo> {
     /** Abilita il discovery (es. attiva il bluetooth). */
     void enableDiscovery(Fragment fragment, int requestCode);
 
+    /**
+     * Imposta l'energia del motore.
+     * @param value -254: indietro tutta, 0: fermo, 255: avanti tutta
+     */
+    void setEnginePower(int value);
+
+    /**
+     * Imposta l'intensita' della sterzata.
+     * @param value -254: tutto a sinistra, 0: dritto, 255: tutto a destra
+     */
+    void setTurn(int value);
+
 }
