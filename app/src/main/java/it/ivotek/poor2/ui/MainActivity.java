@@ -3,7 +3,6 @@ package it.ivotek.poor2.ui;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -24,7 +23,8 @@ public class MainActivity extends AppCompatActivity implements
     NavigationView.OnNavigationItemSelectedListener,
     ServiceConnectionFragment.OnServiceConnectionFragmentListener,
     ConnectFragment.OnConnectionFragmentListener,
-    ControlFragment.OnControlFragmentListener {
+    ControlFragment.OnControlFragmentListener,
+    SensorsFragment.OnSensorsFragmentListener {
 
     private TextView mDrawerStatus;
 
@@ -109,23 +109,26 @@ public class MainActivity extends AppCompatActivity implements
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        }
-        else if (id == R.id.nav_gallery) {
+        ServiceConnectionFragment f = getConnectionFragment();
+        RobotService service = f.getService();
 
+        if (id == R.id.nav_control) {
+            if (service.isConnected()) {
+                goToControl();
+            }
         }
-        else if (id == R.id.nav_slideshow) {
-
+        else if (id == R.id.nav_sensors) {
+            if (service.isConnected()) {
+                goToSensors();
+            }
         }
         else if (id == R.id.nav_manage) {
-
+            // TODO
         }
-        else if (id == R.id.nav_share) {
-
-        }
-        else if (id == R.id.nav_send) {
-
+        else if (id == R.id.nav_disconnect) {
+            service.disconnect();
+            // FIXME questo non dovrebbe essere chiamato in automatico dal servizio in teoria?
+            onDisconnected();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -143,20 +146,12 @@ public class MainActivity extends AppCompatActivity implements
         ServiceConnectionFragment f = getConnectionFragment();
         RobotService service = f.getService();
 
-        Fragment fragment;
         if (service.isConnected()) {
-            fragment = ControlFragment.newInstance();
-
-            RobotConnectInfo robot = service.getConnectedRobot();
-            setConnectedTo(robot.toString());
+            onConnected(service.getConnectedRobot());
         }
         else {
-            fragment = ConnectFragment.newInstance();
+            onDisconnected();
         }
-
-        getSupportFragmentManager().beginTransaction()
-            .replace(R.id.content, fragment)
-            .commit();
     }
 
     @Override
@@ -173,24 +168,44 @@ public class MainActivity extends AppCompatActivity implements
         setDrawerStatus(getString(R.string.drawer_status_connected, name));
     }
 
+    void goToControl() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setCheckedItem(R.id.nav_control);
+        // apri il fragment di controllo
+        getSupportFragmentManager().beginTransaction()
+            .replace(R.id.content, ControlFragment.newInstance())
+            .commit();
+    }
+
+    void goToSensors() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setCheckedItem(R.id.nav_sensors);
+        // apri il fragment dei sensori
+        getSupportFragmentManager().beginTransaction()
+            .replace(R.id.content, SensorsFragment.newInstance())
+            .commit();
+    }
+
     @Override
     public void onConnected(final RobotConnectInfo connectInfo) {
         Log.v("Poor2", "connected to " + connectInfo);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                navigationView.getMenu().findItem(R.id.nav_disconnect).setVisible(true);
                 setConnectedTo(connectInfo.toString());
-                // apri il fragment di controllo
-                getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content, ControlFragment.newInstance())
-                    .commit();
+                goToControl();
             }
         });
     }
 
+    /** Disconnessione volontaria o dal robot. */
     @Override
     public void onDisconnected() {
-        // disconnessione volontaria o dal robot
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.getMenu().findItem(R.id.nav_disconnect).setVisible(false);
+        setDrawerStatus(getString(R.string.drawer_status_disconnected));
         getSupportFragmentManager().beginTransaction()
             .replace(R.id.content, ConnectFragment.newInstance())
             .commit();

@@ -16,6 +16,7 @@ import it.ivotek.poor2.client.IRobotClient;
 import it.ivotek.poor2.client.RobotConnectInfo;
 import it.ivotek.poor2.client.RobotConnectListener;
 import it.ivotek.poor2.client.RobotDiscoveryListener;
+import it.ivotek.poor2.client.RobotSensorsListener;
 
 
 /**
@@ -70,6 +71,10 @@ public class RobotService extends Service {
 
     public void setConnectListener(RobotConnectListener listener) {
         mConnectListener = listener;
+    }
+
+    public void setSensorsListener(RobotSensorsListener listener) {
+        mClient.setSensorsListener(listener);
     }
 
     public boolean canDiscover() {

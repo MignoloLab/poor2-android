@@ -1,0 +1,94 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="it.ivotek.poor2.ui.SensorsFragment">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="?android:attr/textAppearanceLarge"
+                android:textSize="28sp"
+                android:text="@string/sensor_ultrasound_left"
+                android:gravity="start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView android:id="@+id/ultrasound_left"
+                style="?android:attr/textAppearanceLarge"
+                android:text="-280"
+                android:gravity="end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:background="@android:color/darker_gray"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"/>
+
+            <TextView
+                style="?android:attr/textAppearanceLarge"
+                android:textSize="28sp"
+                android:text="@string/sensor_ultrasound_center"
+                android:gravity="start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView android:id="@+id/ultrasound_center"
+                style="?android:attr/textAppearanceLarge"
+                android:text="182"
+                android:gravity="end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:background="@android:color/darker_gray"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"/>
+
+            <TextView
+                style="?android:attr/textAppearanceLarge"
+                android:textSize="28sp"
+                android:text="@string/sensor_ultrasound_right"
+                android:gravity="start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView android:id="@+id/ultrasound_right"
+                style="?android:attr/textAppearanceLarge"
+                android:text="-170"
+                android:gravity="end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:background="@android:color/darker_gray"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"/>
+
+            <TextView
+                style="?android:attr/textAppearanceLarge"
+                android:textSize="28sp"
+                android:text="@string/sensor_compass"
+                android:gravity="start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView android:id="@+id/compass"
+                style="?android:attr/textAppearanceLarge"
+                android:text="0°"
+                android:gravity="end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:background="@android:color/darker_gray"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"/>
+
+        </LinearLayout>
+
+</ScrollView>

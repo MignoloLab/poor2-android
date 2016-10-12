@@ -49,4 +49,7 @@ public interface IRobotClient<T extends RobotConnectInfo> {
      */
     void setTurn(int value);
 
+    /** Imposta il listener per i dati dei sensori. */
+    void setSensorsListener(RobotSensorsListener listener);
+
 }

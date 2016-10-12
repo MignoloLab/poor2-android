@@ -16,4 +16,14 @@
     <string name="drawer_status_connected">CONNECTED TO %s</string>
     <string name="drawer_status_disconnected">DISCONNECTED</string>
 
+    <string name="nav_control">Control</string>
+    <string name="nav_sensors">Sensors</string>
+    <string name="nav_manage">Settings</string>
+    <string name="nav_disconnect">Disconnect</string>
+
+    <string name="sensor_ultrasound_left">Ultrasound left</string>
+    <string name="sensor_ultrasound_center">Ultrasound center</string>
+    <string name="sensor_ultrasound_right">Ultrasound right</string>
+    <string name="sensor_compass">Compass</string>
+
 </resources>

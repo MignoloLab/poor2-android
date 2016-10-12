@@ -26,6 +26,7 @@ public class BluetoothRobotClient implements
 
     private final Context mContext;
     private final Bluetooth mBluetooth;
+    private final MessageParser mMessageParser;
     private final List<RobotConnectInfo> mScanned;
 
     private boolean mFirstTime;
@@ -34,6 +35,7 @@ public class BluetoothRobotClient implements
 
     private RobotDiscoveryListener mDiscoverListener;
     private RobotConnectListener mConnectListener;
+    private RobotSensorsListener mSensorsListener;
     private BluetoothRobotConnectInfo mRobot;
 
     public BluetoothRobotClient(Context context) {
@@ -42,6 +44,7 @@ public class BluetoothRobotClient implements
         mBluetooth.setDiscoveryCallback(this);
         mBluetooth.setCommunicationCallback(this);
         mScanned = new ArrayList<>();
+        mMessageParser = new MessageParser();
         mFirstTime = true;
     }
 
@@ -184,7 +187,15 @@ public class BluetoothRobotClient implements
 
     @Override
     public void onMessage(String message) {
+        Log.v("Poor", "RECV: " + message);
+        if (mMessageParser.feedData(message) && mSensorsListener != null) {
+            mSensorsListener.onSensorsData(mMessageParser);
+        }
+    }
 
+    @Override
+    public void setSensorsListener(RobotSensorsListener listener) {
+        mSensorsListener = listener;
     }
 
     @Override
@@ -242,7 +253,7 @@ public class BluetoothRobotClient implements
 
         // invia messaggio al robot
         String msg = String.format(Locale.US, MESSAGE_MOVE, forward, backward, right, left);
-        Log.d("Poor", "sending to robot: " + msg);
+        Log.d("Poor", "SEND: " + msg);
         mBluetooth.send(msg);
     }
 

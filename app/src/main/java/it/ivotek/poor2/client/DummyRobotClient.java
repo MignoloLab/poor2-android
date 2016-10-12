@@ -98,4 +98,9 @@ public class DummyRobotClient implements
         Log.d("DUMMY", "turning " + value);
     }
 
+    @Override
+    public void setSensorsListener(RobotSensorsListener listener) {
+        // TODO
+    }
+
 }

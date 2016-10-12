@@ -10,10 +10,12 @@ import android.view.ViewGroup;
 import android.widget.SeekBar;
 
 import it.ivotek.poor2.R;
+import it.ivotek.poor2.client.RobotConnectInfo;
+import it.ivotek.poor2.client.RobotConnectListener;
 import it.ivotek.poor2.service.RobotService;
 
 
-public class ControlFragment extends Fragment {
+public class ControlFragment extends Fragment implements RobotConnectListener {
 
     private OnControlFragmentListener mListener;
     private SeekBar mMovementSeek;
@@ -131,12 +133,26 @@ public class ControlFragment extends Fragment {
     public void onPause() {
         super.onPause();
         resetMovement();
+        clearListener();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         resetMovement();
+        setListener();
+    }
+
+    private void setListener() {
+        ServiceConnectionFragment f = getConnectionFragment();
+        RobotService service = f.getService();
+        service.setConnectListener(this);
+    }
+
+    private void clearListener() {
+        ServiceConnectionFragment f = getConnectionFragment();
+        RobotService service = f.getService();
+        service.setConnectListener(null);
     }
 
     /** Resetta a movimento e sterzata neutri. */
@@ -144,6 +160,27 @@ public class ControlFragment extends Fragment {
         // il listener si occupera' di inviare i dati al servizio
         mTurnSeek.setProgress(50);
         mMovementSeek.setProgress(50);
+    }
+
+    @Override
+    public void onAuthorized(RobotConnectInfo robot) {
+        // non usato
+    }
+
+    @Override
+    public void onConnected(RobotConnectInfo robot) {
+        // non usato
+    }
+
+    @Override
+    public void onDisconnected(RobotConnectInfo robot) {
+        if (mListener != null)
+            mListener.onDisconnected();
+    }
+
+    @Override
+    public void onConnectError(RobotConnectInfo robot, String message) {
+        // non usato
     }
 
     /**
