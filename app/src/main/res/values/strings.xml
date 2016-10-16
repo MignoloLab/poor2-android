@@ -25,5 +25,14 @@
     <string name="sensor_ultrasound_center">Ultrasound center</string>
     <string name="sensor_ultrasound_right">Ultrasound right</string>
     <string name="sensor_compass">Compass</string>
+    <string name="sensor_accelerationX">Acceleration (X)</string>
+    <string name="sensor_accelerationY">Acceleration (Y)</string>
+    <string name="sensor_accelerationZ">Acceleration (Z)</string>
+    <string name="sensor_tiltX">Tilt (X)</string>
+    <string name="sensor_tiltY">Tilt (Y)</string>
+    <string name="sensor_tiltZ">Tilt (Z)</string>
+    <string name="sensor_humidity">Humidity</string>
+    <string name="sensor_temperature">Temperature (°C)</string>
+    <string name="sensor_powerIn">Power In (V)</string>
 
 </resources>

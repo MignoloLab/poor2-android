@@ -79,7 +79,15 @@ public class MessageParser implements RobotSensorsData {
         mUltrasoundCenter = parseInt(values[1], -1);
         mUltrasoundRight = parseInt(values[2], -1);
         mCompass = parseFloat(values[3], -1);
-        // TODO parsa altri campi
+        mAccelerationX = parseInt(values[4], -1);
+        mAccelerationY = parseInt(values[5], -1);
+        mAccelerationZ = parseInt(values[6], -1);
+        mTiltX = parseInt(values[7], -1);
+        mTiltY = parseInt(values[8], -1);
+        mTiltZ = parseInt(values[9], -1);
+        mHumidity = parseInt(values[10], -1);
+        mTemperature = parseInt(values[11], -1);
+        mPowerIn = parseFloat(values[12], -1);
 
         return true;
     }

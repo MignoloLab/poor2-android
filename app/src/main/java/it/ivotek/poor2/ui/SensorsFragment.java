@@ -28,6 +28,15 @@ public class SensorsFragment extends Fragment implements RobotConnectListener, R
     private TextView mUltrasoundCenter;
     private TextView mUltrasoundRight;
     private TextView mCompass;
+    private TextView mAccelerationX;
+    private TextView mAccelerationY;
+    private TextView mAccelerationZ;
+    private TextView mTiltX;
+    private TextView mTiltY;
+    private TextView mTiltZ;
+    private TextView mHumidity;
+    private TextView mTemperature;
+    private TextView mPowerIn;
 
     public SensorsFragment() {
     }
@@ -48,6 +57,15 @@ public class SensorsFragment extends Fragment implements RobotConnectListener, R
         mUltrasoundCenter = (TextView) view.findViewById(R.id.ultrasound_center);
         mUltrasoundRight = (TextView) view.findViewById(R.id.ultrasound_right);
         mCompass = (TextView) view.findViewById(R.id.compass);
+        mAccelerationX = (TextView) view.findViewById(R.id.accelerationX);
+        mAccelerationY = (TextView) view.findViewById(R.id.accelerationY);
+        mAccelerationZ = (TextView) view.findViewById(R.id.accelerationZ);
+        mTiltX = (TextView) view.findViewById(R.id.tiltX);
+        mTiltY = (TextView) view.findViewById(R.id.tiltY);
+        mTiltZ = (TextView) view.findViewById(R.id.tiltZ);
+        mHumidity = (TextView) view.findViewById(R.id.humidity);
+        mTemperature = (TextView) view.findViewById(R.id.temperature);
+        mPowerIn = (TextView) view.findViewById(R.id.powerIn);
     }
 
     // FIXME codice duplicato in MainActivity
@@ -138,6 +156,15 @@ public class SensorsFragment extends Fragment implements RobotConnectListener, R
                 mUltrasoundCenter.setText(String.valueOf(data.getUltrasoundCenter()));
                 mUltrasoundRight.setText(String.valueOf(data.getUltrasoundRight()));
                 mCompass.setText(String.format(Locale.US, "%.2f°", data.getCompass()));
+                mAccelerationX.setText(String.valueOf(data.getAccelerationX()));
+                mAccelerationY.setText(String.valueOf(data.getAccelerationY()));
+                mAccelerationZ.setText(String.valueOf(data.getAccelerationZ()));
+                mTiltX.setText(String.valueOf(data.getTiltX()));
+                mTiltY.setText(String.valueOf(data.getTiltY()));
+                mTiltZ.setText(String.valueOf(data.getTiltZ()));
+                mHumidity.setText(String.format(Locale.US, "%d%%", data.getHumidity()));
+                mTemperature.setText(String.format(Locale.US, "%d°", data.getTemperature()));
+                mPowerIn.setText(String.format(Locale.US, "%.2f V", data.getPowerIn()));
             }
         });
     }
