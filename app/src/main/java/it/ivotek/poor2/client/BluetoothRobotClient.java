@@ -22,7 +22,7 @@ public class BluetoothRobotClient implements
         IRobotClient<BluetoothRobotConnectInfo>,
         Bluetooth.DiscoveryCallback, Bluetooth.CommunicationCallback {
 
-    private static final String MESSAGE_MOVE = "*%03d%03d%03d%03d";
+    private static final String MESSAGE_MOVE = "[%03d%03d%03d%03d]";
 
     private final Context mContext;
     private final Bluetooth mBluetooth;
