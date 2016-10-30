@@ -1,5 +1,8 @@
 package it.ivotek.poor2.ui;
 
+import com.jmedeisis.bugstick.Joystick;
+import com.jmedeisis.bugstick.JoystickListener;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SeekBar;
 
 import it.ivotek.poor2.R;
 import it.ivotek.poor2.client.RobotConnectInfo;
@@ -18,8 +20,8 @@ import it.ivotek.poor2.service.RobotService;
 public class ControlFragment extends Fragment implements RobotConnectListener {
 
     private OnControlFragmentListener mListener;
-    private SeekBar mMovementSeek;
-    private SeekBar mTurnSeek;
+    private Joystick mMovementSeek;
+    private Joystick mTurnSeek;
 
     public ControlFragment() {
     }
@@ -36,64 +38,66 @@ public class ControlFragment extends Fragment implements RobotConnectListener {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        mMovementSeek = (SeekBar) view.findViewById(R.id.seek_movement);
-        mMovementSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        mMovementSeek = (Joystick) view.findViewById(R.id.seek1);
+        mMovementSeek.setMotionConstraint(Joystick.MotionConstraint.VERTICAL);
+        mMovementSeek.setJoystickListener(new JoystickListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                setMovement(progress);
+            public void onDown() {
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+            public void onDrag(float degrees, float offset) {
+                // trasforma offset in percentuale
+                // degrees: -180 -> 180
+                // offset: 0 -> 1
+                setMovement(offset * (degrees / Math.abs(degrees)));
             }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // riporta la seek a neutro
-                seekBar.setProgress(50);
+            public void onUp() {
+                setMovement(0);
             }
         });
-        mTurnSeek = (SeekBar) view.findViewById(R.id.seek_turn);
-        mTurnSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        mTurnSeek = (Joystick) view.findViewById(R.id.seek2);
+        mTurnSeek.setMotionConstraint(Joystick.MotionConstraint.HORIZONTAL);
+        mTurnSeek.setJoystickListener(new JoystickListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                setTurn(progress);
+            public void onDown() {
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+            public void onDrag(float degrees, float offset) {
+                // trasforma offset in percentuale
+                // degrees: -180 -> 180
+                // offset: 0 -> 1
+                //Log.v("Poor", "degrees: " + degrees + ", offset: " + offset);
+                setTurn(offset * (degrees != 0 ? (degrees / Math.abs(degrees)) : 1));
             }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // riporta la seek a neutro
-                seekBar.setProgress(50);
+            public void onUp() {
+                setTurn(0);
             }
         });
     }
 
-    /** @param value Valore 0-100 per il movimento avanti/indietro. */
-    void setMovement(int value) {
+    /** @param value Valore [-1, 1] per il movimento avanti/indietro. */
+    void setMovement(float value) {
         ServiceConnectionFragment f = getConnectionFragment();
         RobotService service = f.getService();
         service.setEnginePower(convertSeekValue(value));
     }
 
-    /** @param value Valore 0-100 per il controllo dello sterzo (0=sinistra, 100=destra). */
-    void setTurn(int value) {
+    /** @param value Valore [-1, 1] per il controllo dello sterzo (-1=sinistra, 1=destra). */
+    void setTurn(float value) {
         ServiceConnectionFragment f = getConnectionFragment();
         RobotService service = f.getService();
         service.setTurn(convertSeekValue(value));
     }
 
-    /** Converte un valore 0-100 in [-255, 255]. */
-    private int convertSeekValue(int value) {
-        if (value == 50)
-            // inutile fare calcoli...
-            return 0;
-
-        int comp = value * 512 / 100;
-        return comp - 256 + (value > 50 ? -1 : 1);
+    /** Converte un valore [-1, 1] in [-255, 255]. */
+    private int convertSeekValue(float value) {
+        return (int) Math.floor(value * 255);
     }
 
     // FIXME codice duplicato in MainActivity
@@ -157,9 +161,8 @@ public class ControlFragment extends Fragment implements RobotConnectListener {
 
     /** Resetta a movimento e sterzata neutri. */
     private void resetMovement() {
-        // il listener si occupera' di inviare i dati al servizio
-        mTurnSeek.setProgress(50);
-        mMovementSeek.setProgress(50);
+        setMovement(0);
+        setTurn(0);
     }
 
     @Override

@@ -1,0 +1,5 @@
+<resources>
+    <!-- Joystick sizes -->
+    <dimen name="base_size">214dp</dimen>
+    <dimen name="stick_size">94dp</dimen>
+</resources>
