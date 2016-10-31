@@ -35,4 +35,8 @@
     <string name="sensor_temperature">Temperature (°C)</string>
     <string name="sensor_powerIn">Power In (V)</string>
 
+    <string name="btn_turtle_mode">Turtle mode</string>
+    <string name="btn_turtle_mode_off">Turtle mode OFF</string>
+    <string name="btn_turtle_mode_on">Turtle mode ON</string>
+
 </resources>

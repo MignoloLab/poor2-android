@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ToggleButton;
 
 import it.ivotek.poor2.R;
 import it.ivotek.poor2.client.RobotConnectInfo;
@@ -22,6 +23,7 @@ public class ControlFragment extends Fragment implements RobotConnectListener {
     private OnControlFragmentListener mListener;
     private Joystick mMovementSeek;
     private Joystick mTurnSeek;
+    private ToggleButton mSlowMode;
 
     public ControlFragment() {
     }
@@ -47,6 +49,10 @@ public class ControlFragment extends Fragment implements RobotConnectListener {
 
             @Override
             public void onDrag(float degrees, float offset) {
+                // modalita' tartaruga - dividi per due
+                if (isSlowMode())
+                    offset /= 2;
+
                 // trasforma offset in percentuale
                 // degrees: -180 -> 180
                 // offset: 0 -> 1
@@ -58,6 +64,7 @@ public class ControlFragment extends Fragment implements RobotConnectListener {
                 setMovement(0);
             }
         });
+
         mTurnSeek = (Joystick) view.findViewById(R.id.seek2);
         mTurnSeek.setMotionConstraint(Joystick.MotionConstraint.HORIZONTAL);
         mTurnSeek.setJoystickListener(new JoystickListener() {
@@ -67,10 +74,13 @@ public class ControlFragment extends Fragment implements RobotConnectListener {
 
             @Override
             public void onDrag(float degrees, float offset) {
+                // modalita' tartaruga - dividi per due
+                if (isSlowMode())
+                    offset /= 2;
+
                 // trasforma offset in percentuale
                 // degrees: -180 -> 180
                 // offset: 0 -> 1
-                //Log.v("Poor", "degrees: " + degrees + ", offset: " + offset);
                 setTurn(offset * (degrees != 0 ? (degrees / Math.abs(degrees)) : 1));
             }
 
@@ -79,6 +89,12 @@ public class ControlFragment extends Fragment implements RobotConnectListener {
                 setTurn(0);
             }
         });
+
+        mSlowMode = (ToggleButton) view.findViewById(R.id.toggle_slow);
+    }
+
+    private boolean isSlowMode() {
+        return mSlowMode.isChecked();
     }
 
     /** @param value Valore [-1, 1] per il movimento avanti/indietro. */

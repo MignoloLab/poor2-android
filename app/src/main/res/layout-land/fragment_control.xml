@@ -44,9 +44,9 @@
     </LinearLayout>
 
     <ToggleButton android:id="@+id/toggle_slow"
-        android:text="Turtle mode"
-        android:textOff="Turtle mode OFF"
-        android:textOn="Turtle mode ON"
+        android:text="@string/btn_turtle_mode"
+        android:textOff="@string/btn_turtle_mode_off"
+        android:textOn="@string/btn_turtle_mode_on"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
