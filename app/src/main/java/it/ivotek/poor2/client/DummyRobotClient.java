@@ -58,6 +58,7 @@ public class DummyRobotClient implements
         if (mConnectListener != null)
             throw new IllegalArgumentException("Another connection is active or in progress");
 
+        mDiscoverListener = null;
         mConnectListener = listener;
         mRobot = robot;
         mConnectListener.onConnected(robot);
