@@ -8,6 +8,8 @@ import java.util.Locale;
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -28,10 +30,9 @@ public class BluetoothRobotClient implements
     private final Bluetooth mBluetooth;
     private final MessageParser mMessageParser;
     private final List<RobotConnectInfo> mScanned;
+    private final MessageSender mMessageSender;
 
     private boolean mFirstTime;
-    private int mEngineValue;
-    private int mTurnValue;
 
     private RobotDiscoveryListener mDiscoverListener;
     private RobotConnectListener mConnectListener;
@@ -46,6 +47,7 @@ public class BluetoothRobotClient implements
         mScanned = new ArrayList<>();
         mMessageParser = new MessageParser();
         mFirstTime = true;
+        mMessageSender = new MessageSender(mBluetooth);
     }
 
     @Override
@@ -169,6 +171,7 @@ public class BluetoothRobotClient implements
     public void onConnect(BluetoothDevice device) {
         final RobotConnectListener l = mConnectListener;
         final BluetoothRobotConnectInfo robot = mRobot;
+        mMessageSender.start();
         if (l != null) {
             l.onConnected(robot);
         }
@@ -178,6 +181,7 @@ public class BluetoothRobotClient implements
     public void onDisconnect(BluetoothDevice device, String message) {
         final RobotConnectListener l = mConnectListener;
         final BluetoothRobotConnectInfo robot = mRobot;
+        mMessageSender.stop();
         mConnectListener = null;
         mRobot = null;
         if (l != null) {
@@ -200,12 +204,14 @@ public class BluetoothRobotClient implements
 
     @Override
     public void onError(String message) {
+        // TODO gestisci errori particolari di I/O
     }
 
     @Override
     public void onConnectError(BluetoothDevice device, String message) {
         final RobotConnectListener l = mConnectListener;
         final BluetoothRobotConnectInfo robot = mRobot;
+        mMessageSender.stop();
         mConnectListener = null;
         mRobot = null;
         if (l != null) {
@@ -215,46 +221,95 @@ public class BluetoothRobotClient implements
 
     @Override
     public void setEnginePower(int value) {
-        mEngineValue = value;
-        updateMovement();
+        mMessageSender.setEngineValue(value);
     }
 
     @Override
     public void setTurn(int value) {
-        mTurnValue = value;
-        updateMovement();
+        mMessageSender.setTurnValue(value);
     }
 
-    private void updateMovement() {
-        if (!isConnected())
-            return;
+    @SuppressWarnings("WeakerAccess")
+    static final class MessageSender extends Handler {
+        static final int MSG_MOVE = 1;
 
-        // avanti/indietro
-        int forward, backward;
-        if (mEngineValue < 0) {
-            forward = 0;
-            backward = Math.abs(mEngineValue);
-        }
-        else {
-            forward = Math.abs(mEngineValue);
-            backward = 0;
-        }
+        /** Delay tra i messaggi. */
+        private static final int DELAY = 250;
 
-        // sinistra/destra
-        int left, right;
-        if (mTurnValue < 0) {
-            left = Math.abs(mTurnValue);
-            right = 0;
-        }
-        else {
-            left = 0;
-            right = Math.abs(mTurnValue);
+        private final Bluetooth mBluetooth;
+
+        private int mEngineValue;
+        private int mTurnValue;
+
+        public MessageSender(Bluetooth bluetooth) {
+            super();
+            mBluetooth = bluetooth;
         }
 
-        // invia messaggio al robot
-        String msg = String.format(Locale.US, MESSAGE_MOVE, forward, backward, right, left);
-        Log.d("Poor", "SEND: " + msg);
-        mBluetooth.send(msg);
+        public void start() {
+            Message repeat = obtainMessage(MSG_MOVE);
+            sendMessageDelayed(repeat, DELAY);
+        }
+
+        public void stop() {
+            removeMessages(MSG_MOVE);
+            if (mBluetooth.isConnected())
+                // forza disconnessione
+                mBluetooth.disconnect();
+        }
+
+        public void setEngineValue(int engineValue) {
+            mEngineValue = engineValue;
+        }
+
+        public void setTurnValue(int turnValue) {
+            mTurnValue = turnValue;
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == MSG_MOVE) {
+                if (move()) {
+                    start();
+                }
+            }
+            else {
+                super.handleMessage(msg);
+            }
+        }
+
+        private boolean move() {
+            if (!mBluetooth.isConnected())
+                return false;
+
+            // avanti/indietro
+            int forward, backward;
+            if (mEngineValue < 0) {
+                forward = 0;
+                backward = Math.abs(mEngineValue);
+            }
+            else {
+                forward = Math.abs(mEngineValue);
+                backward = 0;
+            }
+
+            // sinistra/destra
+            int left, right;
+            if (mTurnValue < 0) {
+                left = Math.abs(mTurnValue);
+                right = 0;
+            }
+            else {
+                left = 0;
+                right = Math.abs(mTurnValue);
+            }
+
+            // invia messaggio al robot
+            String msg = String.format(Locale.US, MESSAGE_MOVE, forward, backward, right, left);
+            Log.d("Poor", "SEND: " + msg);
+            mBluetooth.send(msg);
+            return true;
+        }
     }
 
 }
