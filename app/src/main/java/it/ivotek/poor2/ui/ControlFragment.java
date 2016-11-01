@@ -130,7 +130,6 @@ public class ControlFragment extends Fragment implements RobotConnectListener {
         return f;
     }
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

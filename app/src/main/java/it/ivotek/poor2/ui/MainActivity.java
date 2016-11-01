@@ -3,6 +3,7 @@ package it.ivotek.poor2.ui;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -26,7 +27,12 @@ public class MainActivity extends AppCompatActivity implements
     ControlFragment.OnControlFragmentListener,
     SensorsFragment.OnSensorsFragmentListener {
 
+    private static final int NAV_CONTROL = 1;
+    private static final int NAV_SENSORS = 2;
+
     private TextView mDrawerStatus;
+    /** Usato in {@link #onSaveInstanceState(Bundle)} per recuperare l'ultima schermata mostrata. */
+    private int mLastScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +54,24 @@ public class MainActivity extends AppCompatActivity implements
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        if (savedInstanceState != null) {
+            mLastScreen = savedInstanceState.getInt("lastScreen");
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Fragment f = getSupportFragmentManager().findFragmentById(R.id.content);
+        int lastScreen = 0;
+        if (f instanceof ControlFragment) {
+            lastScreen = NAV_CONTROL;
+        }
+        else if (f instanceof SensorsFragment) {
+            lastScreen = NAV_SENSORS;
+        }
+        outState.putInt("lastScreen", lastScreen);
     }
 
     private ServiceConnectionFragment getConnectionFragment() {
@@ -195,7 +219,14 @@ public class MainActivity extends AppCompatActivity implements
                 NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
                 navigationView.getMenu().findItem(R.id.nav_disconnect).setVisible(true);
                 setConnectedTo(connectInfo.toString());
-                goToControl();
+                switch (mLastScreen) {
+                    case NAV_SENSORS:
+                        goToSensors();
+                        break;
+                    case NAV_CONTROL:
+                    default:
+                        goToControl();
+                }
             }
         });
     }
