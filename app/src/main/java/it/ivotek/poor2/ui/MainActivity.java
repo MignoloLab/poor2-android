@@ -201,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements
             .replace(R.id.content, ControlFragment.newInstance())
             .commit();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        getSupportActionBar().hide();
     }
 
     void goToSensors() {
@@ -211,6 +212,7 @@ public class MainActivity extends AppCompatActivity implements
             .replace(R.id.content, SensorsFragment.newInstance())
             .commit();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        getSupportActionBar().show();
     }
 
     @Override
