@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">Poor2</string>
+
+    <string name="navigation_drawer_open">Apri navigazione</string>
+    <string name="navigation_drawer_close">Chiudi navigazione</string>
+
+    <string name="action_settings">Impostazioni</string>
+
+    <string name="text_click_to_connect">Clicca per connetterti al robot.</string>
+    <string name="btn_connect">Connetti</string>
+    <string name="btn_cancel">Annulla</string>
+
+    <string name="status_discovering">Ricerca robot…</string>
+    <string name="status_connecting">Connessione…</string>
+
+    <string name="drawer_status_connected">CONNESSO A %s</string>
+    <string name="drawer_status_disconnected">DISCONNESSO</string>
+
+    <string name="nav_control">Controllo</string>
+    <string name="nav_sensors">Sensori</string>
+    <string name="nav_manage">Impostazioni</string>
+    <string name="nav_disconnect">Disconnetti</string>
+
+    <string name="sensor_ultrasound_left">Ultrasuono SX</string>
+    <string name="sensor_ultrasound_center">Ultrasuono centro</string>
+    <string name="sensor_ultrasound_right">Ultrasuono DX</string>
+    <string name="sensor_compass">Bussola</string>
+    <string name="sensor_accelerationX">Accelerazione (X)</string>
+    <string name="sensor_accelerationY">Accelerazione (Y)</string>
+    <string name="sensor_accelerationZ">Accelerazione (Z)</string>
+    <string name="sensor_tiltX">Sbandamento (X)</string>
+    <string name="sensor_tiltY">Sbandamento (Y)</string>
+    <string name="sensor_tiltZ">Sbandamento (Z)</string>
+    <string name="sensor_humidity">Umidita`</string>
+    <string name="sensor_temperature">Temperatura (°C)</string>
+    <string name="sensor_powerIn">Energia (V)</string>
+
+    <string name="btn_turtle_mode">Tartaruga</string>
+    <string name="btn_turtle_mode_off">Tartaruga OFF</string>
+    <string name="btn_turtle_mode_on">Tartaruga ON</string>
+
+</resources>
