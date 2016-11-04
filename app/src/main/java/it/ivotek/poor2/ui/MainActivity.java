@@ -1,5 +1,6 @@
 package it.ivotek.poor2.ui;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -199,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements
         getSupportFragmentManager().beginTransaction()
             .replace(R.id.content, ControlFragment.newInstance())
             .commit();
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
     void goToSensors() {
@@ -208,6 +210,7 @@ public class MainActivity extends AppCompatActivity implements
         getSupportFragmentManager().beginTransaction()
             .replace(R.id.content, SensorsFragment.newInstance())
             .commit();
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     }
 
     @Override
