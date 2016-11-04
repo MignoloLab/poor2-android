@@ -152,21 +152,29 @@ public class SensorsFragment extends Fragment implements RobotConnectListener, R
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mUltrasoundLeft.setText(String.valueOf(data.getUltrasoundLeft()));
-                mUltrasoundCenter.setText(String.valueOf(data.getUltrasoundCenter()));
-                mUltrasoundRight.setText(String.valueOf(data.getUltrasoundRight()));
-                mCompass.setText(String.format(Locale.US, "%.2f°", data.getCompass()));
-                mAccelerationX.setText(String.valueOf(data.getAccelerationX()));
-                mAccelerationY.setText(String.valueOf(data.getAccelerationY()));
-                mAccelerationZ.setText(String.valueOf(data.getAccelerationZ()));
-                mTiltX.setText(String.valueOf(data.getTiltX()));
-                mTiltY.setText(String.valueOf(data.getTiltY()));
-                mTiltZ.setText(String.valueOf(data.getTiltZ()));
-                mHumidity.setText(String.format(Locale.US, "%d%%", data.getHumidity()));
-                mTemperature.setText(String.format(Locale.US, "%d°", data.getTemperature()));
-                mPowerIn.setText(String.format(Locale.US, "%.2f V", data.getPowerIn()));
+                mUltrasoundLeft.setText(formatValue(data.getUltrasoundLeft()));
+                mUltrasoundCenter.setText(formatValue(data.getUltrasoundCenter()));
+                mUltrasoundRight.setText(formatValue(data.getUltrasoundRight()));
+                mCompass.setText(formatValue("%.2f°", data.getCompass()));
+                mAccelerationX.setText(formatValue(data.getAccelerationX()));
+                mAccelerationY.setText(formatValue(data.getAccelerationY()));
+                mAccelerationZ.setText(formatValue(data.getAccelerationZ()));
+                mTiltX.setText(formatValue(data.getTiltX()));
+                mTiltY.setText(formatValue(data.getTiltY()));
+                mTiltZ.setText(formatValue(data.getTiltZ()));
+                mHumidity.setText(formatValue("%d%%", data.getHumidity()));
+                mTemperature.setText(formatValue("%d°", data.getTemperature()));
+                mPowerIn.setText(formatValue("%.2f V", data.getPowerIn()));
             }
         });
+    }
+
+    private String formatValue(Object value) {
+        return value != null ? String.valueOf(value) : "ERR";
+    }
+
+    private String formatValue(String fmt, Object value) {
+        return value != null ? String.format(Locale.US, fmt, value) : "ERR";
     }
 
     /**

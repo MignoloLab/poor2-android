@@ -28,19 +28,19 @@ public class MessageParser implements RobotSensorsData {
     private final StringBuilder mData = new StringBuilder();
 
     // campi parsati dall'ultimo messaggio
-    private int mUltrasoundLeft;
-    private int mUltrasoundCenter;
-    private int mUltrasoundRight;
-    private float mCompass;
-    private int mAccelerationX;
-    private int mAccelerationY;
-    private int mAccelerationZ;
-    private int mTiltX;
-    private int mTiltY;
-    private int mTiltZ;
-    private int mHumidity;
-    private int mTemperature;
-    private float mPowerIn;
+    private Integer mUltrasoundLeft;
+    private Integer mUltrasoundCenter;
+    private Integer mUltrasoundRight;
+    private Float mCompass;
+    private Integer mAccelerationX;
+    private Integer mAccelerationY;
+    private Integer mAccelerationZ;
+    private Integer mTiltX;
+    private Integer mTiltY;
+    private Integer mTiltZ;
+    private Integer mHumidity;
+    private Integer mTemperature;
+    private Float mPowerIn;
 
     /**
      * Fornisce dati al parser.
@@ -52,7 +52,7 @@ public class MessageParser implements RobotSensorsData {
         // appendi subito i dati entranti
         mData.append(message);
 
-        int start = mData.indexOf(MARKER_START);
+        int start = mData.lastIndexOf(MARKER_START);
         int end = -1;
         if (start >= 0) {
             // avevamo iniziato dei dati, aspettiamoci la fine
@@ -60,6 +60,7 @@ public class MessageParser implements RobotSensorsData {
         }
 
         if (start >= 0 && end >= 0) {
+            reset();
             if (parse(mData.substring(start+1, end))) {
                 mData.delete(0, mData.length());
                 return true;
@@ -69,109 +70,135 @@ public class MessageParser implements RobotSensorsData {
         return false;
     }
 
+    private void reset() {
+        mUltrasoundLeft = null;
+        mUltrasoundCenter = null;
+        mUltrasoundRight = null;
+        mCompass = null;
+        mAccelerationX = null;
+        mAccelerationY = null;
+        mAccelerationZ = null;
+        mTiltX = null;
+        mTiltY = null;
+        mTiltZ = null;
+        mHumidity = null;
+        mTemperature = null;
+        mPowerIn = null;
+    }
+
     private boolean parse(String data) {
         String[] values = data.split(SEPARATOR);
-        if (values.length < 13)
-            // TODO errore oppure andiamo avanti lo stesso con quello che abbiamo?
-            return false;
 
-        mUltrasoundLeft = parseInt(values[0], -1);
-        mUltrasoundCenter = parseInt(values[1], -1);
-        mUltrasoundRight = parseInt(values[2], -1);
-        mCompass = parseFloat(values[3], -1);
-        mAccelerationX = parseInt(values[4], -1);
-        mAccelerationY = parseInt(values[5], -1);
-        mAccelerationZ = parseInt(values[6], -1);
-        mTiltX = parseInt(values[7], -1);
-        mTiltY = parseInt(values[8], -1);
-        mTiltZ = parseInt(values[9], -1);
-        mHumidity = parseInt(values[10], -1);
-        mTemperature = parseInt(values[11], -1);
-        mPowerIn = parseFloat(values[12], -1);
+        if (values.length > 0)
+            mUltrasoundLeft = parseInt(values[0]);
+        if (values.length > 1)
+            mUltrasoundCenter = parseInt(values[1]);
+        if (values.length > 2)
+            mUltrasoundRight = parseInt(values[2]);
+        if (values.length > 3)
+            mCompass = parseFloat(values[3]);
+        if (values.length > 4)
+            mAccelerationX = parseInt(values[4]);
+        if (values.length > 5)
+            mAccelerationY = parseInt(values[5]);
+        if (values.length > 6)
+            mAccelerationZ = parseInt(values[6]);
+        if (values.length > 7)
+            mTiltX = parseInt(values[7]);
+        if (values.length > 8)
+            mTiltY = parseInt(values[8]);
+        if (values.length > 9)
+            mTiltZ = parseInt(values[9]);
+        if (values.length > 10)
+            mHumidity = parseInt(values[10]);
+        if (values.length > 11)
+            mTemperature = parseInt(values[11]);
+        if (values.length > 12)
+            mPowerIn = parseFloat(values[12]);
 
         return true;
     }
 
-    private int parseInt(String value, int error) {
+    private Integer parseInt(String value) {
         try {
             return Integer.parseInt(value);
         }
         catch (NumberFormatException ignored) {
-            return error;
+            return null;
         }
     }
 
-    private float parseFloat(String value, float error) {
+    private Float parseFloat(String value) {
         try {
             return Float.parseFloat(value);
         }
         catch (NumberFormatException ignored) {
-            return error;
+            return null;
         }
     }
 
     @Override
-    public int getUltrasoundLeft() {
+    public Integer getUltrasoundLeft() {
         return mUltrasoundLeft;
     }
 
     @Override
-    public int getUltrasoundCenter() {
+    public Integer getUltrasoundCenter() {
         return mUltrasoundCenter;
     }
 
     @Override
-    public int getUltrasoundRight() {
+    public Integer getUltrasoundRight() {
         return mUltrasoundRight;
     }
 
     @Override
-    public float getCompass() {
+    public Float getCompass() {
         return mCompass;
     }
 
     @Override
-    public int getAccelerationX() {
+    public Integer getAccelerationX() {
         return mAccelerationX;
     }
 
     @Override
-    public int getAccelerationY() {
+    public Integer getAccelerationY() {
         return mAccelerationY;
     }
 
     @Override
-    public int getAccelerationZ() {
+    public Integer getAccelerationZ() {
         return mAccelerationZ;
     }
 
     @Override
-    public int getTiltX() {
+    public Integer getTiltX() {
         return mTiltX;
     }
 
     @Override
-    public int getTiltY() {
+    public Integer getTiltY() {
         return mTiltY;
     }
 
     @Override
-    public int getTiltZ() {
+    public Integer getTiltZ() {
         return mTiltZ;
     }
 
     @Override
-    public int getHumidity() {
+    public Integer getHumidity() {
         return mHumidity;
     }
 
     @Override
-    public int getTemperature() {
+    public Integer getTemperature() {
         return mTemperature;
     }
 
     @Override
-    public float getPowerIn() {
+    public Float getPowerIn() {
         return mPowerIn;
     }
 

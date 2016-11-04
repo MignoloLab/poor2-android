@@ -7,42 +7,42 @@ package it.ivotek.poor2.client;
 public interface RobotSensorsData {
 
     /** Sensore Ultrasuoni Sinistro (3 cifre solo positivi da 0 a 400) */
-    int getUltrasoundLeft();
+    Integer getUltrasoundLeft();
 
     /** Sensore Ultrasuoni Centro (3 cifre solo positivi da 0 a 400) */
-    int getUltrasoundCenter();
+    Integer getUltrasoundCenter();
 
     /** Sensore Ultrasuoni Destro (3 cifre solo positivi da 0 a 400) */
-    int getUltrasoundRight();
+    Integer getUltrasoundRight();
 
     /** Bussola in gradi (5 cifre divise da un punto da 0.00 a 360.00) */
-    float getCompass();
+    Float getCompass();
 
     /** Accelerazione asse X (I dati sono positivi e negativi, 5 cifre anche con segno negativo) */
-    int getAccelerationX();
+    Integer getAccelerationX();
 
     /** Accelerazione asse Y (I dati sono positivi e negativi, 5 cifre anche con segno negativo) */
-    int getAccelerationY();
+    Integer getAccelerationY();
 
     /** Accelerazione asse Z (I dati sono positivi e negativi, 5 cifre anche con segno negativo) */
-    int getAccelerationZ();
+    Integer getAccelerationZ();
 
     /** Inclinazione asse X (I dati sono positivi e negativi, 5 cifre anche con segno negativo) */
-    int getTiltX();
+    Integer getTiltX();
 
     /** Inclinazione asse Y (I dati sono positivi e negativi, 5 cifre anche con segno negativo) */
-    int getTiltY();
+    Integer getTiltY();
 
     /** Inclinazione asse Z (I dati sono positivi e negativi, 5 cifre anche con segno negativo) */
-    int getTiltZ();
+    Integer getTiltZ();
 
     /** Umidità (I dati sono positivi, 2 cifre) */
-    int getHumidity();
+    Integer getHumidity();
 
     /** Temperatura (I dati sono positivi, 2 cifre) */
-    int getTemperature();
+    Integer getTemperature();
 
     /** Alimentazione (I dati sono positivi, 3 0 4 cifre divise da un punto esempio 8.20 oppure 12.10) */
-    float getPowerIn();
+    Float getPowerIn();
 
 }

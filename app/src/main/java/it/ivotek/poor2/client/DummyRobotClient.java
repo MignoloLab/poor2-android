@@ -102,6 +102,72 @@ public class DummyRobotClient implements
     @Override
     public void setSensorsListener(RobotSensorsListener listener) {
         // TODO
+        listener.onSensorsData(new RobotSensorsData() {
+            @Override
+            public Integer getUltrasoundLeft() {
+                return 10;
+            }
+
+            @Override
+            public Integer getUltrasoundCenter() {
+                return 20;
+            }
+
+            @Override
+            public Integer getUltrasoundRight() {
+                return null;
+            }
+
+            @Override
+            public Float getCompass() {
+                return 34.0F;
+            }
+
+            @Override
+            public Integer getAccelerationX() {
+                return null;
+            }
+
+            @Override
+            public Integer getAccelerationY() {
+                return 112;
+            }
+
+            @Override
+            public Integer getAccelerationZ() {
+                return null;
+            }
+
+            @Override
+            public Integer getTiltX() {
+                return null;
+            }
+
+            @Override
+            public Integer getTiltY() {
+                return null;
+            }
+
+            @Override
+            public Integer getTiltZ() {
+                return null;
+            }
+
+            @Override
+            public Integer getHumidity() {
+                return null;
+            }
+
+            @Override
+            public Integer getTemperature() {
+                return 35;
+            }
+
+            @Override
+            public Float getPowerIn() {
+                return null;
+            }
+        });
     }
 
 }

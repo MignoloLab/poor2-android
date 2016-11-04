@@ -19,7 +19,6 @@
 
             <TextView android:id="@+id/ultrasound_left"
                 style="?android:attr/textAppearanceLarge"
-                android:text="-280"
                 android:gravity="end"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -39,7 +38,6 @@
 
             <TextView android:id="@+id/ultrasound_center"
                 style="?android:attr/textAppearanceLarge"
-                android:text="182"
                 android:gravity="end"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -59,7 +57,6 @@
 
             <TextView android:id="@+id/ultrasound_right"
                 style="?android:attr/textAppearanceLarge"
-                android:text="-170"
                 android:gravity="end"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -79,7 +76,6 @@
 
             <TextView android:id="@+id/compass"
                 style="?android:attr/textAppearanceLarge"
-                android:text="0°"
                 android:gravity="end"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -99,7 +95,6 @@
 
             <TextView android:id="@+id/accelerationX"
                 style="?android:attr/textAppearanceLarge"
-                android:text="0"
                 android:gravity="end"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -119,7 +114,6 @@
 
             <TextView android:id="@+id/accelerationY"
                 style="?android:attr/textAppearanceLarge"
-                android:text="0"
                 android:gravity="end"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -139,7 +133,6 @@
 
             <TextView android:id="@+id/accelerationZ"
                 style="?android:attr/textAppearanceLarge"
-                android:text="0"
                 android:gravity="end"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -159,7 +152,6 @@
 
             <TextView android:id="@+id/tiltX"
                 style="?android:attr/textAppearanceLarge"
-                android:text="0"
                 android:gravity="end"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -179,7 +171,6 @@
 
             <TextView android:id="@+id/tiltY"
                 style="?android:attr/textAppearanceLarge"
-                android:text="0"
                 android:gravity="end"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -199,7 +190,6 @@
 
             <TextView android:id="@+id/tiltZ"
                 style="?android:attr/textAppearanceLarge"
-                android:text="0"
                 android:gravity="end"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -219,7 +209,6 @@
 
             <TextView android:id="@+id/humidity"
                 style="?android:attr/textAppearanceLarge"
-                android:text="0"
                 android:gravity="end"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -239,7 +228,6 @@
 
             <TextView android:id="@+id/temperature"
                 style="?android:attr/textAppearanceLarge"
-                android:text="0"
                 android:gravity="end"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -259,7 +247,6 @@
 
             <TextView android:id="@+id/powerIn"
                 style="?android:attr/textAppearanceLarge"
-                android:text="0"
                 android:gravity="end"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
