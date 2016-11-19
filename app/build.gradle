@@ -20,9 +20,9 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    compile 'com.android.support:design:25.0.0'
-    compile 'com.android.support:support-v4:25.0.0'
+    compile 'com.android.support:appcompat-v7:25.0.1'
+    compile 'com.android.support:design:25.0.1'
+    compile 'com.android.support:support-v4:25.0.1'
     compile 'com.jmedeisis:bugstick:0.2.2'
     testCompile 'junit:junit:4.12'
 }
