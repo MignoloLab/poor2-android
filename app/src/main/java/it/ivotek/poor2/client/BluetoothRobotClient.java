@@ -95,12 +95,14 @@ public class BluetoothRobotClient implements
 
     @Override
     public void connect(BluetoothRobotConnectInfo robot, RobotConnectListener listener) {
-        if (mConnectListener != null)
-            throw new IllegalArgumentException("Another connection is active or in progress");
-
         mConnectListener = listener;
         mRobot = robot;
         mBluetooth.connectToAddress(robot.getAddress());
+    }
+
+    @Override
+    public void setConnectListener(RobotConnectListener listener) {
+        mConnectListener = listener;
     }
 
     @Override

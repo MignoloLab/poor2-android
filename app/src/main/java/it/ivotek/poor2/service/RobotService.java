@@ -9,7 +9,6 @@ import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
-import it.ivotek.poor2.BuildConfig;
 import it.ivotek.poor2.client.BluetoothRobotClient;
 import it.ivotek.poor2.client.DummyRobotClient;
 import it.ivotek.poor2.client.IRobotClient;
@@ -71,6 +70,7 @@ public class RobotService extends Service {
 
     public void setConnectListener(RobotConnectListener listener) {
         mConnectListener = listener;
+        mClient.setConnectListener(listener);
     }
 
     public void setSensorsListener(RobotSensorsListener listener) {

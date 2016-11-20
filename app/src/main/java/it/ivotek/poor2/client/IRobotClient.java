@@ -19,6 +19,9 @@ public interface IRobotClient<T extends RobotConnectInfo> {
     /** Connette al robot. */
     void connect(T robot, RobotConnectListener listener);
 
+    /** Imposta un nuovo listener di connessione. */
+    void setConnectListener(RobotConnectListener listener);
+
     /** Richiede autorizzazione al robot (es. bluetooth pair). */
     void authorize(T robot, RobotConnectListener listener);
 

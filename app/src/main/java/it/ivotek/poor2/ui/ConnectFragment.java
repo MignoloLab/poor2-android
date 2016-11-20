@@ -236,7 +236,7 @@ public class ConnectFragment extends Fragment implements
     public void onDisconnected(RobotConnectInfo connectInfo) {
         mConnecting = false;
         if (mListener != null) {
-            // TODO mListener.onDisconnected(robot);
+            mListener.onDisconnected();
         }
     }
 
@@ -269,5 +269,6 @@ public class ConnectFragment extends Fragment implements
      */
     public interface OnConnectionFragmentListener {
         void onConnected(RobotConnectInfo connectInfo);
+        void onDisconnected();
     }
 }

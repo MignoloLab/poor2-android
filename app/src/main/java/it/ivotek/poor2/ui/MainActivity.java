@@ -239,11 +239,17 @@ public class MainActivity extends AppCompatActivity implements
     /** Disconnessione volontaria o dal robot. */
     @Override
     public void onDisconnected() {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.getMenu().findItem(R.id.nav_disconnect).setVisible(false);
-        setDrawerStatus(getString(R.string.drawer_status_disconnected));
-        getSupportFragmentManager().beginTransaction()
-            .replace(R.id.content, ConnectFragment.newInstance())
-            .commit();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                navigationView.getMenu().findItem(R.id.nav_disconnect).setVisible(false);
+                setDrawerStatus(getString(R.string.drawer_status_disconnected));
+                getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content, ConnectFragment.newInstance())
+                    .commit();
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+            }
+        });
     }
 }

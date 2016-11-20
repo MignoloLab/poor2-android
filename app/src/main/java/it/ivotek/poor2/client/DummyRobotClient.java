@@ -55,13 +55,15 @@ public class DummyRobotClient implements
 
     @Override
     public void connect(DummyRobotConnectInfo robot, RobotConnectListener listener) {
-        if (mConnectListener != null)
-            throw new IllegalArgumentException("Another connection is active or in progress");
-
         mDiscoverListener = null;
         mConnectListener = listener;
         mRobot = robot;
         mConnectListener.onConnected(robot);
+    }
+
+    @Override
+    public void setConnectListener(RobotConnectListener listener) {
+        mConnectListener = listener;
     }
 
     @Override
