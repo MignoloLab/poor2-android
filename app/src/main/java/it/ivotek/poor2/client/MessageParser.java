@@ -41,6 +41,13 @@ public class MessageParser implements RobotSensorsData {
     private Integer mHumidity;
     private Integer mTemperature;
     private Float mPowerIn;
+    private Integer mOpticalLeft;
+    private Integer mOpticalCenterLeft;
+    private Integer mOpticalCenterRight;
+    private Integer mOpticalRight;
+    private Float mPhotoresistorLeft;
+    private Float mPhotoresistorCenter;
+    private Float mPhotoresistorRight;
 
     /**
      * Fornisce dati al parser.
@@ -84,6 +91,13 @@ public class MessageParser implements RobotSensorsData {
         mHumidity = null;
         mTemperature = null;
         mPowerIn = null;
+        mOpticalLeft = null;
+        mOpticalCenterLeft = null;
+        mOpticalCenterRight = null;
+        mOpticalRight = null;
+        mPhotoresistorLeft = null;
+        mPhotoresistorCenter = null;
+        mPhotoresistorRight = null;
     }
 
     private boolean parse(String data) {
@@ -115,6 +129,20 @@ public class MessageParser implements RobotSensorsData {
             mTemperature = parseInt(values[11]);
         if (values.length > 12)
             mPowerIn = parseFloat(values[12]);
+        if (values.length > 13)
+            mOpticalLeft = parseInt(values[13]);
+        if (values.length > 14)
+            mOpticalCenterLeft = parseInt(values[14]);
+        if (values.length > 15)
+            mOpticalCenterRight = parseInt(values[15]);
+        if (values.length > 16)
+            mOpticalRight = parseInt(values[16]);
+        if (values.length > 17)
+            mPhotoresistorLeft = parseFloat(values[17]);
+        if (values.length > 18)
+            mPhotoresistorCenter = parseFloat(values[18]);
+        if (values.length > 19)
+            mPhotoresistorRight = parseFloat(values[19]);
 
         return true;
     }
@@ -200,6 +228,41 @@ public class MessageParser implements RobotSensorsData {
     @Override
     public Float getPowerIn() {
         return mPowerIn;
+    }
+
+    @Override
+    public Integer getOpticalLeft() {
+        return mOpticalLeft;
+    }
+
+    @Override
+    public Integer getOpticalCenterLeft() {
+        return mOpticalCenterLeft;
+    }
+
+    @Override
+    public Integer getOpticalCenterRight() {
+        return mOpticalCenterRight;
+    }
+
+    @Override
+    public Integer getOpticalRight() {
+        return mOpticalRight;
+    }
+
+    @Override
+    public Float getPhotoresistorLeft() {
+        return mPhotoresistorLeft;
+    }
+
+    @Override
+    public Float getPhotoresistorCenter() {
+        return mPhotoresistorCenter;
+    }
+
+    @Override
+    public Float getPhotoresistorRight() {
+        return mPhotoresistorRight;
     }
 
 }

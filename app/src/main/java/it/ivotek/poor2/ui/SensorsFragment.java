@@ -6,7 +6,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +36,13 @@ public class SensorsFragment extends Fragment implements RobotConnectListener, R
     private TextView mHumidity;
     private TextView mTemperature;
     private TextView mPowerIn;
+    private TextView mOpticalLeft;
+    private TextView mOpticalCenterLeft;
+    private TextView mOpticalCenterRight;
+    private TextView mOpticalRight;
+    private TextView mPhotoresistorLeft;
+    private TextView mPhotoresistorCenter;
+    private TextView mPhotoresistorRight;
 
     public SensorsFragment() {
     }
@@ -66,6 +72,13 @@ public class SensorsFragment extends Fragment implements RobotConnectListener, R
         mHumidity = (TextView) view.findViewById(R.id.humidity);
         mTemperature = (TextView) view.findViewById(R.id.temperature);
         mPowerIn = (TextView) view.findViewById(R.id.powerIn);
+        mOpticalLeft = (TextView) view.findViewById(R.id.optical_left);
+        mOpticalCenterLeft = (TextView) view.findViewById(R.id.optical_center_left);
+        mOpticalCenterRight = (TextView) view.findViewById(R.id.optical_center_right);
+        mOpticalRight = (TextView) view.findViewById(R.id.optical_right);
+        mPhotoresistorLeft = (TextView) view.findViewById(R.id.photoresistor_left);
+        mPhotoresistorCenter = (TextView) view.findViewById(R.id.photoresistor_center);
+        mPhotoresistorRight = (TextView) view.findViewById(R.id.photoresistor_right);
     }
 
     // FIXME codice duplicato in MainActivity
@@ -165,6 +178,13 @@ public class SensorsFragment extends Fragment implements RobotConnectListener, R
                 mHumidity.setText(formatValue("%d%%", data.getHumidity()));
                 mTemperature.setText(formatValue("%d°", data.getTemperature()));
                 mPowerIn.setText(formatValue("%.2f V", data.getPowerIn()));
+                mOpticalLeft.setText(formatValue(data.getOpticalLeft()));
+                mOpticalCenterLeft.setText(formatValue(data.getOpticalCenterLeft()));
+                mOpticalCenterRight.setText(formatValue(data.getOpticalCenterRight()));
+                mOpticalRight.setText(formatValue(data.getOpticalRight()));
+                mPhotoresistorLeft.setText(formatValue("%.2f V", data.getPhotoresistorLeft()));
+                mPhotoresistorCenter.setText(formatValue("%.2f V", data.getPhotoresistorCenter()));
+                mPhotoresistorRight.setText(formatValue("%.2f V", data.getPhotoresistorRight()));
             }
         });
     }

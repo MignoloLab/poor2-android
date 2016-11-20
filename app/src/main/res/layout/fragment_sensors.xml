@@ -256,6 +256,139 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"/>
 
+            <TextView
+                style="?android:attr/textAppearanceLarge"
+                android:textSize="28sp"
+                android:text="@string/sensor_optical_left"
+                android:gravity="start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView android:id="@+id/optical_left"
+                style="?android:attr/textAppearanceLarge"
+                android:gravity="end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:background="@android:color/darker_gray"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"/>
+
+            <TextView
+                style="?android:attr/textAppearanceLarge"
+                android:textSize="28sp"
+                android:text="@string/sensor_optical_center_left"
+                android:gravity="start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView android:id="@+id/optical_center_left"
+                style="?android:attr/textAppearanceLarge"
+                android:gravity="end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:background="@android:color/darker_gray"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"/>
+
+            <TextView
+                style="?android:attr/textAppearanceLarge"
+                android:textSize="28sp"
+                android:text="@string/sensor_optical_center_right"
+                android:gravity="start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView android:id="@+id/optical_center_right"
+                style="?android:attr/textAppearanceLarge"
+                android:gravity="end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:background="@android:color/darker_gray"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"/>
+
+            <TextView
+                style="?android:attr/textAppearanceLarge"
+                android:textSize="28sp"
+                android:text="@string/sensor_optical_right"
+                android:gravity="start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView android:id="@+id/optical_right"
+                style="?android:attr/textAppearanceLarge"
+                android:gravity="end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:background="@android:color/darker_gray"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"/>
+
+            <TextView
+                style="?android:attr/textAppearanceLarge"
+                android:textSize="28sp"
+                android:text="@string/sensor_photoresistor_left"
+                android:gravity="start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView android:id="@+id/photoresistor_left"
+                style="?android:attr/textAppearanceLarge"
+                android:gravity="end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:background="@android:color/darker_gray"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"/>
+
+            <TextView
+                style="?android:attr/textAppearanceLarge"
+                android:textSize="28sp"
+                android:text="@string/sensor_photoresistor_center"
+                android:gravity="start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView android:id="@+id/photoresistor_center"
+                style="?android:attr/textAppearanceLarge"
+                android:gravity="end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:background="@android:color/darker_gray"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"/>
+
+            <TextView
+                style="?android:attr/textAppearanceLarge"
+                android:textSize="28sp"
+                android:text="@string/sensor_photoresistor_right"
+                android:gravity="start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView android:id="@+id/photoresistor_right"
+                style="?android:attr/textAppearanceLarge"
+                android:gravity="end"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:background="@android:color/darker_gray"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"/>
+
         </LinearLayout>
 
 </ScrollView>

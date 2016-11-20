@@ -34,6 +34,13 @@
     <string name="sensor_humidity">Humidity</string>
     <string name="sensor_temperature">Temperature (°C)</string>
     <string name="sensor_powerIn">Power In (V)</string>
+    <string name="sensor_optical_left">Optical left</string>
+    <string name="sensor_optical_center_left">Optical center/left</string>
+    <string name="sensor_optical_center_right">Optical center/right</string>
+    <string name="sensor_optical_right">Optical right</string>
+    <string name="sensor_photoresistor_left">Photoresistor left</string>
+    <string name="sensor_photoresistor_center">Photoresistor center</string>
+    <string name="sensor_photoresistor_right">Photoresistor right</string>
 
     <string name="btn_turtle_mode">Turtle mode</string>
     <string name="btn_turtle_mode_off">Turtle mode OFF</string>

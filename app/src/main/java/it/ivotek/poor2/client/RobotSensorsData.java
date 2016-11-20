@@ -45,4 +45,25 @@ public interface RobotSensorsData {
     /** Alimentazione (I dati sono positivi, 3 0 4 cifre divise da un punto esempio 8.20 oppure 12.10) */
     Float getPowerIn();
 
+    /** Sensore ottico sinistro (0-1) */
+    Integer getOpticalLeft();
+
+    /** Sensore ottico centrale sinistro (0-1) */
+    Integer getOpticalCenterLeft();
+
+    /** Sensore ottico centrale destro (0-1) */
+    Integer getOpticalCenterRight();
+
+    /** Sensore ottico destro (0-1) */
+    Integer getOpticalRight();
+
+    /** Fotoresistenza sinistra ([0, 5] V) */
+    Float getPhotoresistorLeft();
+
+    /** Fotoresistenza centrale ([0, 5] V) */
+    Float getPhotoresistorCenter();
+
+    /** Fotoresistenza destra ([0, 5] V) */
+    Float getPhotoresistorRight();
+
 }

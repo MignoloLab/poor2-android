@@ -167,6 +167,41 @@ public class DummyRobotClient implements
                 public Float getPowerIn() {
                     return null;
                 }
+
+                @Override
+                public Integer getOpticalLeft() {
+                    return 1;
+                }
+
+                @Override
+                public Integer getOpticalCenterLeft() {
+                    return 2;
+                }
+
+                @Override
+                public Integer getOpticalCenterRight() {
+                    return 3;
+                }
+
+                @Override
+                public Integer getOpticalRight() {
+                    return 4;
+                }
+
+                @Override
+                public Float getPhotoresistorLeft() {
+                    return 1.3F;
+                }
+
+                @Override
+                public Float getPhotoresistorCenter() {
+                    return 3.7F;
+                }
+
+                @Override
+                public Float getPhotoresistorRight() {
+                    return 5.5F;
+                }
             });
         }
     }

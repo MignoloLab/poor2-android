@@ -34,6 +34,13 @@
     <string name="sensor_humidity">Umidita`</string>
     <string name="sensor_temperature">Temperatura (°C)</string>
     <string name="sensor_powerIn">Energia (V)</string>
+    <string name="sensor_optical_left">Ottico SX</string>
+    <string name="sensor_optical_center_left">Ottico centro-SX</string>
+    <string name="sensor_optical_center_right">Ottico centro-DX</string>
+    <string name="sensor_optical_right">Ottico DX</string>
+    <string name="sensor_photoresistor_left">Fotoresistenza SX</string>
+    <string name="sensor_photoresistor_center">Fotoresistanza centro</string>
+    <string name="sensor_photoresistor_right">Fotoresistenza DX</string>
 
     <string name="btn_turtle_mode">Tartaruga</string>
     <string name="btn_turtle_mode_off">Tartaruga OFF</string>
