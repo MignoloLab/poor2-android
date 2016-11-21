@@ -4,12 +4,17 @@ import com.jmedeisis.bugstick.Joystick;
 import com.jmedeisis.bugstick.JoystickListener;
 
 import android.content.Context;
+import android.gesture.GestureOverlayView;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GestureDetectorCompat;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import it.ivotek.poor2.R;
@@ -91,6 +96,29 @@ public class ControlFragment extends Fragment implements RobotConnectListener {
         });
 
         mSlowMode = (ToggleButton) view.findViewById(R.id.toggle_slow);
+
+        ((GestureOverlayView) view).setGestureVisible(false);
+        final GestureDetectorCompat gst = new GestureDetectorCompat(view.getContext(), new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                if (isDownSwipe(e1.getX(), e1.getY(), e2.getX(), e2.getY())) {
+                    ((MainActivity) getActivity()).showToolbar();
+                    return true;
+                }
+                return false;
+            }
+
+            private boolean isDownSwipe(float x1, float y1, float x2, float y2) {
+                double angle = Math.toDegrees(Math.atan2(y1 - y2, x2 - x1));
+                return (angle < -45 && angle>= -135);
+            }
+        });
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gst.onTouchEvent(event);
+            }
+        });
     }
 
     private boolean isSlowMode() {
@@ -128,6 +156,14 @@ public class ControlFragment extends Fragment implements RobotConnectListener {
             getFragmentManager().executePendingTransactions();
         }
         return f;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // FIXME dipendenza dalla classe MainActivity
+        ((MainActivity) getActivity()).hideToolbar();
+        Toast.makeText(getActivity(), R.string.toolbar_hide_warning, Toast.LENGTH_LONG).show();
     }
 
     @Override

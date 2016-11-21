@@ -1,49 +1,57 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.gesture.GestureOverlayView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="it.ivotek.poor2.ui.ControlFragment">
 
-    <com.jmedeisis.bugstick.Joystick
-        android:id="@+id/seek1"
-        android:layout_width="@dimen/base_size"
-        android:layout_height="@dimen/base_size"
-        android:background="@drawable/bg_base"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <Button
-            android:layout_width="@dimen/stick_size"
-            android:layout_height="@dimen/stick_size"
-            android:background="@drawable/bg_stick" />
+        <com.jmedeisis.bugstick.Joystick
+            android:id="@+id/seek1"
+            android:layout_width="@dimen/base_size"
+            android:layout_height="@dimen/base_size"
+            android:background="@drawable/bg_base"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
 
-    </com.jmedeisis.bugstick.Joystick>
+            <Button
+                android:layout_width="@dimen/stick_size"
+                android:layout_height="@dimen/stick_size"
+                android:background="@drawable/bg_stick" />
 
-    <com.jmedeisis.bugstick.Joystick
-        android:id="@+id/seek2"
-        android:layout_width="@dimen/base_size"
-        android:layout_height="@dimen/base_size"
-        android:background="@drawable/bg_base"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true">
+        </com.jmedeisis.bugstick.Joystick>
 
-        <Button
-            android:layout_width="@dimen/stick_size"
-            android:layout_height="@dimen/stick_size"
-            android:background="@drawable/bg_stick" />
+        <com.jmedeisis.bugstick.Joystick
+            android:id="@+id/seek2"
+            android:layout_width="@dimen/base_size"
+            android:layout_height="@dimen/base_size"
+            android:background="@drawable/bg_base"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true">
 
-    </com.jmedeisis.bugstick.Joystick>
+            <Button
+                android:layout_width="@dimen/stick_size"
+                android:layout_height="@dimen/stick_size"
+                android:background="@drawable/bg_stick" />
 
-    <ToggleButton android:id="@+id/toggle_slow"
-        android:text="@string/btn_turtle_mode"
-        android:textOff="@string/btn_turtle_mode_off"
-        android:textOn="@string/btn_turtle_mode_on"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+        </com.jmedeisis.bugstick.Joystick>
 
-</RelativeLayout>
+        <ToggleButton android:id="@+id/toggle_slow"
+            android:text="@string/btn_turtle_mode"
+            android:textOff="@string/btn_turtle_mode_off"
+            android:textOn="@string/btn_turtle_mode_on"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+
+</android.gesture.GestureOverlayView>
+

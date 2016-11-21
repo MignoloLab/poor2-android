@@ -1,8 +1,11 @@
 package it.ivotek.poor2.ui;
 
+import android.animation.Animator;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -11,9 +14,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
 
 import it.ivotek.poor2.R;
@@ -35,12 +41,18 @@ public class MainActivity extends AppCompatActivity implements
     /** Usato in {@link #onSaveInstanceState(Bundle)} per recuperare l'ultima schermata mostrata. */
     private int mLastScreen;
 
+    private Handler mHandler;
+    private AppBarLayout mToolbarParent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mToolbarParent = (AppBarLayout) findViewById(R.id.toolbar_parent);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mHandler = new Handler();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -201,7 +213,6 @@ public class MainActivity extends AppCompatActivity implements
             .replace(R.id.content, ControlFragment.newInstance())
             .commit();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        getSupportActionBar().hide();
     }
 
     void goToSensors() {
@@ -212,7 +223,61 @@ public class MainActivity extends AppCompatActivity implements
             .replace(R.id.content, SensorsFragment.newInstance())
             .commit();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-        getSupportActionBar().show();
+    }
+
+    void hideToolbar() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mToolbarParent.animate()
+                    .translationY(-mToolbarParent.getBottom())
+                    .setInterpolator(new AccelerateInterpolator())
+                    .setListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            getSupportActionBar().hide();
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+                        }
+                    })
+                    .start();
+            }
+        }, 1000);
+    }
+
+    void showToolbar() {
+        mToolbarParent.animate()
+            .translationY(0)
+            .setInterpolator(new DecelerateInterpolator())
+            .setListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    getSupportActionBar().show();
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+                }
+            })
+            .start();
     }
 
     @Override

@@ -46,4 +46,6 @@
     <string name="btn_turtle_mode_off">Tartaruga OFF</string>
     <string name="btn_turtle_mode_on">Tartaruga ON</string>
 
+    <string name="toolbar_hide_warning">Striscia verso il basso per mostrare la toolbar.</string>
+
 </resources>

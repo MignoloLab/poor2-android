@@ -46,4 +46,6 @@
     <string name="btn_turtle_mode_off">Turtle mode OFF</string>
     <string name="btn_turtle_mode_on">Turtle mode ON</string>
 
+    <string name="toolbar_hide_warning">Swipe down to show toolbar.</string>
+
 </resources>
