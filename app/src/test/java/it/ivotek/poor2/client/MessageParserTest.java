@@ -22,6 +22,17 @@ public class MessageParserTest {
         assertEquals(Integer.valueOf(34), p.getUltrasoundCenter());
         assertEquals(Integer.valueOf(23), p.getUltrasoundRight());
         assertNull(p.getCompass());
+        p.feedData("[5[45[87");
+        p.feedData("|22|180|23.00]");
+        assertEquals(Integer.valueOf(87), p.getUltrasoundLeft());
+        assertEquals(Integer.valueOf(22), p.getUltrasoundCenter());
+        assertEquals(Integer.valueOf(180), p.getUltrasoundRight());
+        assertEquals(Float.valueOf(23), p.getCompass());
+        p.feedData("[2[5[57|11|13|24.00]");
+        assertEquals(Integer.valueOf(57), p.getUltrasoundLeft());
+        assertEquals(Integer.valueOf(11), p.getUltrasoundCenter());
+        assertEquals(Integer.valueOf(13), p.getUltrasoundRight());
+        assertEquals(Float.valueOf(24), p.getCompass());
     }
 
 }
